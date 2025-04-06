@@ -28,6 +28,32 @@
       color: #2c3e50;
       margin-bottom: 1.5rem;
     }
+    
+    /* Banner with Provided Image */
+    .banner {
+      width: 100%;
+      max-width: 700px;
+      height: 300px;
+      background-image: url("asset1.jpeg");
+      background-size: cover;
+      background-position: top;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Optional overlay for better text contrast if needed later */
+    .banner::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.35);
+    }
+    
     /* Input Container */
     .generator-container {
       background: #fff;
@@ -67,11 +93,13 @@
       border-radius: 4px;
       margin-left: 10px;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background 0.3s, transform 0.3s;
     }
     button:hover {
       background: #2980b9;
+      transform: scale(1.05);
     }
+    
     /* Workout Output Styles */
     .workout-container {
       max-width: 700px;
@@ -83,6 +111,8 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       padding: 1.5rem;
       margin-bottom: 1.5rem;
+      /* Animation for new content */
+      animation: fadeInUp 0.5s ease-out;
     }
     .workout-section h2 {
       margin-top: 0;
@@ -104,11 +134,26 @@
       font-size: 0.9rem;
       color: #aaa;
     }
+    
+    /* Keyframes for fade-in animation */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
   </style>
 </head>
 <body>
   <h1>Workout Plan Generator</h1>
-
+  
+  <!-- Banner Section -->
+  <div class="banner"></div>
+  
   <!-- Input Section -->
   <div class="generator-container">
     <p>Enter day number (leave blank to use current day offset):</p>
@@ -117,14 +162,14 @@
       <button id="generateButton">Generate Workout</button>
     </div>
   </div>
-
+  
   <!-- Workout Output Container -->
   <div id="workout-container" class="workout-container"></div>
-
+  
   <footer>
     Generated workout plan using modern web design.
   </footer>
-
+  
   <script>
     // The workout dictionary for push and pull routines
     const workoutDictionary = {
@@ -134,20 +179,24 @@
           [
             "Seated Dumbbell Shoulder Press",
             "Standing Barbell Overhead Press",
-            "Shoulder Press Machine",
-          ],
+            "Shoulder Press Machine"
+          ]
         ],
         "Lateral Raise": [
           2,
-          ["Dumbbell Lateral Raise", "Cable Lateral Raise", "Machine Lateral Raise"],
+          [
+            "Dumbbell Lateral Raise",
+            "Cable Lateral Raise",
+            "Machine Lateral Raise"
+          ]
         ],
         "Chest Press": [
           2,
           [
             "Flat Barbell Bench Press",
             "Incline Dumbbell Bench Press",
-            "Decline Chest Press Machine",
-          ],
+            "Decline Chest Press Machine"
+          ]
         ],
         "Chest Fly": [1, ["High Cable Fly", "Low Cable Fly", "Butterfly"]],
         Tricep: [
@@ -156,13 +205,13 @@
             "Tricep Pushdown",
             "Tricep Overhead Press",
             "Tricep Cable Kickback",
-            "Dips",
-          ],
+            "Dips"
+          ]
         ],
         "Wrist Flexors": [1, ["Wrist Curls"]],
         Squat: [2, ["Free Squat", "Hack Squat", "Leg Press"]],
         "Leg Extension": [1, ["Leg Extension", "Split Squat"]],
-        Calves: [2, ["Seated Calves", "Standing Calves"]],
+        Calves: [2, ["Seated Calves", "Standing Calves"]]
       },
       pull: {
         "Upper Back": [2, ["T-Bar Row + Shrugs", "Bent Over Rows + Shrugs"]],
@@ -174,8 +223,8 @@
             "Iliac",
             "Cable Pullover",
             "Single Arm Dumbbell Row",
-            "Mid Lat Row Machine",
-          ],
+            "Mid Lat Row Machine"
+          ]
         ],
         "Rear Delts": [2, ["Cable Rear Delt Fly", "Face Pulls", "Reverse Pec Deck"]],
         Bicep: [
@@ -185,12 +234,17 @@
             "Cable Curls",
             "Incline Dumbbell Bicep Curls",
             "Dumbbell Curls",
-            "Preacher Curls",
-          ],
+            "Preacher Curls"
+          ]
         ],
         "Wrist Extensors": [
           1,
-          ["Reverse Curls", "Wrist Extension", "Hammer Curls", "Cable Hammer Curls"],
+          [
+            "Reverse Curls",
+            "Wrist Extension",
+            "Hammer Curls",
+            "Cable Hammer Curls"
+          ]
         ],
         Abs: [2, ["Abs Machine", "Cable Woodchop"]],
         Deadlift: [
@@ -199,11 +253,11 @@
             "Conventional Deadlift",
             "Stiff Leg Deadlift",
             "Hip Thrust",
-            "Back Extension",
-          ],
+            "Back Extension"
+          ]
         ],
-        "Leg Curls": [1, ["Horizontal Leg Curls", "Seated Leg Curls"]],
-      },
+        "Leg Curls": [1, ["Horizontal Leg Curls", "Seated Leg Curls"]]
+      }
     };
 
     // Compute a default offset based on the days passed since a base date.
@@ -257,7 +311,7 @@
     // Generate and display the workout plans for both push and pull, and store the last day value.
     function generateAndDisplayWorkout() {
       const dayInputValue = document.getElementById("dayInput").value;
-      // Save the current input to localStorage.
+      // Save the current input to localStorage
       localStorage.setItem("lastDay", dayInputValue);
       const offset = getOffset();
       let output = "";
@@ -265,6 +319,7 @@
         const plan = generateWorkout(day, offset);
         output += printWorkout(plan, day);
       });
+      // Apply a small fade-in animation by resetting innerHTML (works with our keyframes)
       document.getElementById("workout-container").innerHTML = output;
     }
 
