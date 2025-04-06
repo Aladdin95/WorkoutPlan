@@ -23,18 +23,13 @@
       flex-direction: column;
       align-items: center;
     }
-    h1 {
-      font-size: 2.5rem;
-      color: #2c3e50;
-      margin-bottom: 1.5rem;
-    }
     
     /* Banner with Provided Image */
     .banner {
       width: 100%;
       max-width: 700px;
       height: 300px;
-      background-image: url("images/banner.jpg"); /* Place your banner image here */
+      background-image: url("images/banner.jpg"); /* Place your banner image in the images folder */
       background-size: cover;
       background-position: top;
       border-radius: 8px;
@@ -50,35 +45,37 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.35);
+      background: rgba(0, 0, 0, 0.15);
     }
-    .banner-text {
+    /* Headline: positioned at top-left */
+    .banner-head {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      top: 20px;
+      left: 20px;
       color: #fff;
-      text-align: center;
-      z-index: 2;
-    }
-    .banner-text h2 {
       font-size: 3rem;
-      margin: 0;
-      animation: fadeInDown 0.8s ease-out;
+      z-index: 2;
+      animation: fadeInDown 0.8s ease-out both;
     }
-    .banner-text p {
+    /* Quote: positioned at bottom-right */
+    .banner-quote {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      color: #fff;
       font-size: 1.2rem;
-      margin: 0.5rem 0 0;
-      animation: fadeInUp 0.8s ease-out;
+      text-align: right;
+      z-index: 2;
+      animation: fadeInUp 0.8s ease-out both;
     }
     @keyframes fadeInDown {
       from {
         opacity: 0;
-        transform: translate(-50%, -60%);
+        transform: translateY(-20px);
       }
       to {
         opacity: 1;
-        transform: translate(-50%, -50%);
+        transform: none;
       }
     }
     @keyframes fadeInUp {
@@ -88,7 +85,7 @@
       }
       to {
         opacity: 1;
-        transform: translateY(0);
+        transform: none;
       }
     }
     
@@ -103,7 +100,7 @@
       margin-bottom: 2rem;
     }
     .generator-container p {
-      margin: 0 0 1rem 0;
+      margin-bottom: 1rem;
       font-size: 1rem;
     }
     .input-row {
@@ -149,14 +146,13 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       padding: 1.5rem;
       margin-bottom: 1.5rem;
-      animation: fadeInUp 0.5s ease-out;
+      animation: fadeInUp 0.5s ease-out both;
     }
     .workout-section h2 {
       margin-top: 0;
       color: #2c3e50;
-      /* Removed text-transform or use none */
+      font-size: 1.8rem;
       text-transform: none;
-      font-size: 1.8rem; /* Increase if desired */
     }
     .workout-section ul {
       list-style: none;
@@ -179,14 +175,10 @@
   </style>
 </head>
 <body>
-  <h1>EL-Nos Split</h1>
-  
   <!-- Banner Section -->
   <div class="banner">
-    <div class="banner-text">
-      <h2>EL-Nos Split</h2>
-      <p>Build a better body, build a better life.</p>
-    </div>
+    <div class="banner-head">EL-Nos Split</div>
+    <div class="banner-quote">Build a better body, build a better life.</div>
   </div>
   
   <!-- Input Section -->
@@ -203,7 +195,7 @@
   
   <!-- Footer -->
   <footer>
-    Build a better body, build a better life.
+    Empower your journey, transform your life.
   </footer>
   
   <script>
@@ -330,7 +322,6 @@
     }
 
     // Convert a workout plan object into styled HTML.
-    // The header now shows the workout type (with its first letter capitalized) and the day number.
     function printWorkout(workoutPlan, workoutType, offset) {
       const formattedType = workoutType.charAt(0).toUpperCase() + workoutType.slice(1).toLowerCase();
       let html = `<div class="workout-section">
