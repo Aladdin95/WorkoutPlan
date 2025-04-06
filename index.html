@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workout Plan Generator</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    /* Global Reset and Styling */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f4f7f9;
+      color: #333;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: #2c3e50;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Input Container */
+    .generator-container {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+    .generator-container p {
+      margin: 0 0 1rem 0;
+      font-size: 1rem;
+    }
+    .input-row {
+      display: flex;
+      align-items: center;
+    }
+    input[type="text"] {
+      width: calc(100% - 110px);
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      transition: border 0.3s;
+      outline: none;
+    }
+    input[type="text"]:focus {
+      border: 1px solid #3498db;
+    }
+    button {
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      background: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      margin-left: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+
+    /* Workout Output Styles */
+    .workout-container {
+      max-width: 700px;
+      width: 100%;
+    }
+    .workout-section {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .workout-section h2 {
+      margin-top: 0;
+      color: #2c3e50;
+    }
+    .workout-section ul {
+      list-style: none;
+      padding: 0;
+    }
+    .workout-section li {
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+    }
+    .workout-section li strong {
+      color: #3498db;
+    }
+    footer {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <h1>Workout Plan Generator</h1>
+
+  <!-- Input Section -->
+  <div class="generator-container">
+    <p>Enter day number (leave blank to use current day offset):</p>
+    <div class="input-row">
+      <input type="text" id="dayInput" placeholder="e.g., 15" />
+      <button id="generateButton">Generate Workout</button>
+    </div>
+  </div>
+
+  <!-- Workout output container -->
+  <div id="workout-container" class="workout-container"></div>
+
+  <footer>
+    Generated workout plan using modern web design.
+  </footer>
+
+  <script>
+    // The workout dictionary for push and pull routines
+    const workoutDictionary = {
+      push: {
+        "Shoulder Press": [
+          1,
+          [
+            "Seated Dumbbell Shoulder Press",
+            "Standing Barbell Overhead Press",
+            "Shoulder Press Machine",
+          ],
+        ],
+        "Lateral Raise": [
+          2,
+          ["Dumbbell Lateral Raise", "Cable Lateral Raise", "Machine Lateral Raise"],
+        ],
+        "Chest Press": [
+          2,
+          [
+            "Flat Barbell Bench Press",
+            "Incline Dumbbell Bench Press",
+            "Decline Chest Press Machine",
+          ],
+        ],
+        "Chest Fly": [
+          1,
+          ["High Cable Fly", "Low Cable Fly", "Butterfly"],
+        ],
+        Tricep: [
+          2,
+          [
+            "Tricep Pushdown",
+            "Tricep Overhead Press",
+            "Tricep Cable Kickback",
+            "Dips",
+          ],
+        ],
+        "Wrist Flexors": [1, ["Wrist Curls"]],
+        Squat: [
+          2,
+          ["Free Squat", "Hack Squat", "Leg Press"],
+        ],
+        "Leg Extension": [
+          1,
+          ["Leg Extension", "Split Squat"],
+        ],
+        Calves: [2, ["Seated Calves", "Standing Calves"]],
+      },
+      pull: {
+        "Upper Back": [
+          2,
+          ["T-Bar Row + Shrugs", "Bent Over Rows + Shrugs"],
+        ],
+        Lats: [
+          2,
+          [
+            "Lower Lat Row Machine",
+            "Lat Pulldown",
+            "Iliac",
+            "Cable Pullover",
+            "Single Arm Dumbbell Row",
+            "Mid Lat Row Machine",
+          ],
+        ],
+        "Rear Delts": [
+          2,
+          ["Cable Rear Delt Fly", "Face Pulls", "Reverse Pec Deck"],
+        ],
+        Bicep: [
+          2,
+          [
+            "Cable Behind Back Bicep Curls",
+            "Cable Curls",
+            "Incline Dumbbell Bicep Curls",
+            "Dumbbell Curls",
+            "Preacher Curls",
+          ],
+        ],
+        "Wrist Extensors": [
+          1,
+          ["Reverse Curls", "Wrist Extension", "Hammer Curls", "Cable Hammer Curls"],
+        ],
+        Abs: [2, ["Abs Machine", "Cable Woodchop"]],
+        Deadlift: [
+          2,
+          [
+            "Conventional Deadlift",
+            "Stiff Leg Deadlift",
+            "Hip Thrust",
+            "Back Extension",
+          ],
+        ],
+        "Leg Curls": [1, ["Horizontal Leg Curls", "Seated Leg Curls"]],
+      },
+    };
+
+    // Compute a default offset based on days passed since a base date.
+    function computeDefaultOffset() {
+      const baseDate = new Date("2025-01-01");
+      const today = new Date();
+      const diffTime = today - baseDate;
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays;
+    }
+
+    // Get the offset from user input, or fallback to default.
+    function getOffset() {
+      const dayInput = document.getElementById("dayInput").value;
+      let offset = parseInt(dayInput, 10);
+      if (isNaN(offset)) {
+        offset = computeDefaultOffset();
+      }
+      return offset;
+    }
+
+    // Generate a workout for a given day category using circular selection.
+    function generateWorkout(workoutDay, offset) {
+      const workoutPlan = {};
+      const muscleGroups = workoutDictionary[workoutDay];
+      for (const muscle in muscleGroups) {
+        if (muscleGroups.hasOwnProperty(muscle)) {
+          const [sets, exercises] = muscleGroups[muscle];
+          const index = offset % exercises.length;
+          workoutPlan[muscle] = { sets, exercise: exercises[index] };
+        }
+      }
+      return workoutPlan;
+    }
+
+    // Build HTML for a single workout section.
+    function printWorkout(workoutPlan, workoutType) {
+      let html = `<div class="workout-section">
+                  <h2>${workoutType.toUpperCase()} WORKOUT PLAN</h2>
+                  <ul>`;
+      for (const muscle in workoutPlan) {
+        if (workoutPlan.hasOwnProperty(muscle)) {
+          const { sets, exercise } = workoutPlan[muscle];
+          html += `<li><strong>${muscle}</strong>: ${exercise} (${sets} sets)</li>`;
+        }
+      }
+      html += `</ul></div>`;
+      return html;
+    }
+
+    // Generate both push and pull plans and display them.
+    function generateAndDisplayWorkout() {
+      const offset = getOffset();
+      let output = "";
+      ["push", "pull"].forEach((day) => {
+        const plan = generateWorkout(day, offset);
+        output += printWorkout(plan, day);
+      });
+      document.getElementById("workout-container").innerHTML = output;
+    }
+
+    // Bind the button event.
+    document.getElementById("generateButton").addEventListener("click", generateAndDisplayWorkout);
+  </script>
+</body>
+</html>
