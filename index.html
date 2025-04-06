@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EL-Nos Split</title>
+  <!-- Favicon example -->
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
   <link
     href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
     rel="stylesheet"
@@ -94,7 +97,7 @@
       background: #fff;
       padding: 1.5rem;
       border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       max-width: 500px;
       width: 100%;
       margin-bottom: 2rem;
@@ -143,7 +146,7 @@
     .workout-section {
       background: #fff;
       border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       padding: 1.5rem;
       margin-bottom: 1.5rem;
       animation: fadeInUp 0.5s ease-out both;
@@ -330,7 +333,9 @@
       for (const muscle in workoutPlan) {
         if (workoutPlan.hasOwnProperty(muscle)) {
           const { sets, exercise } = workoutPlan[muscle];
-          html += `<li><strong>${muscle}</strong>: ${exercise} (${sets} sets)</li>`;
+          // Use correct singular/plural for 'set'
+          const setText = sets === 1 ? 'set' : 'sets';
+          html += `<li><strong>${muscle}</strong>: ${exercise} (${sets} ${setText})</li>`;
         }
       }
       html += `</ul></div>`;
