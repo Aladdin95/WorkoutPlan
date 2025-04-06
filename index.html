@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Workout Plan Generator</title>
+  <title>EL-Nos Split</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
     rel="stylesheet"
@@ -34,7 +34,7 @@
       width: 100%;
       max-width: 700px;
       height: 300px;
-      background-image: url("asset1.jpeg");
+      background-image: url("images/banner.jpg"); /* Place your banner image here */
       background-size: cover;
       background-position: top;
       border-radius: 8px;
@@ -43,7 +43,6 @@
       position: relative;
       overflow: hidden;
     }
-    /* Optional overlay for better text contrast if needed later */
     .banner::after {
       content: "";
       position: absolute;
@@ -52,6 +51,45 @@
       right: 0;
       bottom: 0;
       background: rgba(0, 0, 0, 0.35);
+    }
+    .banner-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #fff;
+      text-align: center;
+      z-index: 2;
+    }
+    .banner-text h2 {
+      font-size: 3rem;
+      margin: 0;
+      animation: fadeInDown 0.8s ease-out;
+    }
+    .banner-text p {
+      font-size: 1.2rem;
+      margin: 0.5rem 0 0;
+      animation: fadeInUp 0.8s ease-out;
+    }
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     
     /* Input Container */
@@ -111,12 +149,14 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       padding: 1.5rem;
       margin-bottom: 1.5rem;
-      /* Animation for new content */
       animation: fadeInUp 0.5s ease-out;
     }
     .workout-section h2 {
       margin-top: 0;
       color: #2c3e50;
+      /* Removed text-transform or use none */
+      text-transform: none;
+      font-size: 1.8rem; /* Increase if desired */
     }
     .workout-section ul {
       list-style: none;
@@ -129,30 +169,25 @@
     .workout-section li strong {
       color: #3498db;
     }
+    
+    /* Footer */
     footer {
       margin-top: 2rem;
-      font-size: 0.9rem;
-      color: #aaa;
-    }
-    
-    /* Keyframes for fade-in animation */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      font-size: 1rem;
+      color: #2c3e50;
     }
   </style>
 </head>
 <body>
-  <h1>Workout Plan Generator</h1>
+  <h1>EL-Nos Split</h1>
   
   <!-- Banner Section -->
-  <div class="banner"></div>
+  <div class="banner">
+    <div class="banner-text">
+      <h2>EL-Nos Split</h2>
+      <p>Build a better body, build a better life.</p>
+    </div>
+  </div>
   
   <!-- Input Section -->
   <div class="generator-container">
@@ -166,8 +201,9 @@
   <!-- Workout Output Container -->
   <div id="workout-container" class="workout-container"></div>
   
+  <!-- Footer -->
   <footer>
-    Generated workout plan using modern web design.
+    Build a better body, build a better life.
   </footer>
   
   <script>
@@ -260,7 +296,7 @@
       }
     };
 
-    // Compute a default offset based on the days passed since a base date.
+    // Compute a default offset based on the days passed since a fixed base date.
     function computeDefaultOffset() {
       const baseDate = new Date("2025-01-01");
       const today = new Date();
@@ -269,7 +305,7 @@
       return diffDays;
     }
 
-    // Get the offset from the input; fall back to default if not a valid number.
+    // Get the offset from the input; if invalid, use the default.
     function getOffset() {
       const dayInput = document.getElementById("dayInput").value;
       let offset = parseInt(dayInput, 10);
@@ -294,9 +330,11 @@
     }
 
     // Convert a workout plan object into styled HTML.
-    function printWorkout(workoutPlan, workoutType) {
+    // The header now shows the workout type (with its first letter capitalized) and the day number.
+    function printWorkout(workoutPlan, workoutType, offset) {
+      const formattedType = workoutType.charAt(0).toUpperCase() + workoutType.slice(1).toLowerCase();
       let html = `<div class="workout-section">
-                    <h2>${workoutType.toUpperCase()} WORKOUT PLAN</h2>
+                    <h2>${formattedType} ${offset}</h2>
                     <ul>`;
       for (const muscle in workoutPlan) {
         if (workoutPlan.hasOwnProperty(muscle)) {
@@ -308,18 +346,17 @@
       return html;
     }
 
-    // Generate and display the workout plans for both push and pull, and store the last day value.
+    // Generate and display the workout plans for both push and pull,
+    // and store the last day value in localStorage.
     function generateAndDisplayWorkout() {
       const dayInputValue = document.getElementById("dayInput").value;
-      // Save the current input to localStorage
       localStorage.setItem("lastDay", dayInputValue);
       const offset = getOffset();
       let output = "";
       ["push", "pull"].forEach((day) => {
         const plan = generateWorkout(day, offset);
-        output += printWorkout(plan, day);
+        output += printWorkout(plan, day, offset);
       });
-      // Apply a small fade-in animation by resetting innerHTML (works with our keyframes)
       document.getElementById("workout-container").innerHTML = output;
     }
 
@@ -331,7 +368,7 @@
       }
     });
 
-    // Bind button event.
+    // Bind the button click event.
     document.getElementById("generateButton").addEventListener("click", generateAndDisplayWorkout);
   </script>
 </body>
